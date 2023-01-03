@@ -1,0 +1,58 @@
+{
+    "tasks": {
+        "train": {
+            "run": true,
+            "target_epochs": 20,
+            "checkpoint_dir": "/mnt/data1/output/MAE/out/checkpoints/",
+            "logging_step": 200,
+            "learning_rate": 1e-4,
+            "data": {
+                "dataset": {
+                    "reference_path": "/mnt/data1/dataset/Anime/train/reference/",
+                    "condition_path": "/mnt/data1/dataset/Anime/train/condition/"
+                },
+                "dataloader": {
+                    "batch_size": 64,
+                    "num_workers": 2,
+                    "shuffle": true,
+                    "pin_memory": true,
+                    "drop_last": true
+                }
+            }
+        },
+        "test": {
+            "run": true,
+            "output_dir": "/mnt/data1/output/MAE/out/test/",
+            "checkpoint_path": "/mnt/data1/output/MAE/out/checkpoints/trained.pkl",
+            "mask_ratio": 0.75,
+            "data": {
+                "dataset": {
+                    "reference_path": "/mnt/data1/dataset/Anime/test/reference/",
+                    "condition_path": "/mnt/data1/dataset/Anime/test/condition/"
+                },
+                "dataloader": {
+                    "batch_size": 1,
+                    "num_workers": 1,
+                    "shuffle": false,
+                    "drop_last": false
+                }
+            }
+        }
+    },
+    "model": {
+        "mask_ratio": 0.75,
+        "random_mask": true,
+        "decoder_dim": 512,
+        "decoder_depth": 6,
+        "decoder_heads": 8,
+        "decoder_dim_head": 64,
+        "image_size": [256, 256],
+        "patch_size": [16, 16],
+        "output_dim": 1024,
+        "dim": 1024
+    },
+    "logging": {
+        "console": true,
+        "logfile": "/mnt/data1/output/MAE/out/log/output.log"
+    }
+}
