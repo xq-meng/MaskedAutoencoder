@@ -2,7 +2,7 @@
     "tasks": {
         "train": {
             "run": true,
-            "target_epochs": 20,
+            "target_epochs": 200,
             "checkpoint_dir": "/mnt/data1/output/MAE/out/checkpoints/",
             "logging_step": 200,
             "learning_rate": 1e-4,
@@ -24,7 +24,7 @@
             "run": true,
             "output_dir": "/mnt/data1/output/MAE/out/test/",
             "checkpoint_path": "/mnt/data1/output/MAE/out/checkpoints/trained.pkl",
-            "mask_ratio": 0.75,
+            "mask_ratio": 0,
             "data": {
                 "dataset": {
                     "reference_path": "/mnt/data1/dataset/Anime/test/reference/",
