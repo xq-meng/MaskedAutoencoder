@@ -2,10 +2,17 @@
     "tasks": {
         "train": {
             "run": true,
-            "target_epochs": 200,
+            "target_epochs": 400,
             "checkpoint_dir": "/mnt/data1/output/MAE/out/checkpoints/",
-            "logging_step": 200,
-            "learning_rate": 1e-4,
+            "logging_step": 100,
+            "optimizer_config": {
+                "name": "AdamW",
+                "lr": 1e-4,
+                "warmup_epochs": 40,
+                "optim_params": {
+                    "weight_decay": 0.05
+                }
+            },
             "data": {
                 "dataset": {
                     "reference_path": "/mnt/data1/dataset/Anime/train/reference/",
@@ -41,7 +48,7 @@
     },
     "model": {
         "mask_ratio": 0.75,
-        "random_mask": true,
+        "random_mask": false,
         "decoder_dim": 512,
         "decoder_depth": 6,
         "decoder_heads": 8,

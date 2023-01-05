@@ -45,6 +45,10 @@ class MAE(nn.Module):
         self.decoder_pos_embedding = nn.Embedding(self.num_patches, decoder_dim)
         self.decoder_project_head = nn.Linear(decoder_dim, num_pixel_per_patch)
 
+    def forward_loss(self, patches, pred_patches):
+        loss = (pred_patches - patches) ** 2
+        return loss.mean(dim=1).sum()
+
     def forward(self, x):
         b, c, *_ = x.shape
         batch_range = torch.arange(b).unsqueeze(-1)
@@ -75,9 +79,10 @@ class MAE(nn.Module):
         # decoder 
         decoder_tokens = self.decoder(decoder_tokens)
         # mlp prediction
-        pred_pixel_values = self.decoder_project_head(decoder_tokens)
+        pred_patches = self.decoder_project_head(decoder_tokens)
         # loss 
-        return F.mse_loss(pred_pixel_values, patches)
+        # return F.mse_loss(pred_pixel_values, patches)
+        return self.forward_loss(patches=patches, pred_patches=pred_patches)
         
     @torch.no_grad()
     def inference(

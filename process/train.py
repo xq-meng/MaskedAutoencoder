@@ -10,10 +10,8 @@ class TrainHandler(base.ModelHandler):
         self, 
         model: nn.Module,
         data_loader,
+        optimizer_config,
         target_epochs=-1,
-        learning_rate=1e-3,
-        optimizer_beta1=0.9,
-        optimizer_beta2=0.999,
         checkpoint_epoch=20,
         checkpoint_dir=None,
         logging_step=200,
@@ -26,7 +24,7 @@ class TrainHandler(base.ModelHandler):
         # training parameters
         self.target_epochs = target_epochs
         # optimizer
-        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=learning_rate, betas=(optimizer_beta1, optimizer_beta2))
+        self.optimizer_handler = base.OptimizerHandler(parameters=self.model.parameters(), **optimizer_config)
         # logger
         self.logger = logger if logger is not None else utils.Logger()
         # logging step
@@ -39,18 +37,24 @@ class TrainHandler(base.ModelHandler):
     def run(self):
         while self.epoch < self.target_epochs:
             for step, datas in enumerate(self.data_loader):
-                self.optimizer.zero_grad()
+                # zero grad
+                self.optimizer_handler.optimizer.zero_grad()
+                # update optimizer
+                self.optimizer_handler.update_lr(epoch=(step / len(self.data_loader) + self.epoch), target_epoch=self.target_epochs)
+                # load data 
                 x = datas['reference'].to(self.device)
+                # model step
                 self.loss = self.model(x)
+                # optimzier step
                 self.loss.backward()
-                self.optimizer.step()
+                self.optimizer_handler.optimizer.step()
                 # logging training info
                 if step % self.logging_step == 0:
-                    self.logger.info(f'Epoch = {self.epoch}, Loss = {self.loss:.4e}')
+                    self.logger.info(f'Epoch = {self.epoch}, LR = {self.optimizer_handler.learning_rate():.4e}, Loss = {self.loss:.4e}')
             if (self.checkpoint_dir is not None) and (self.epoch % self.checkpoint_epoch == 0):
-                checkpoint_filename = os.path.join(self.checkpoint_dir, "ep_{}.pkl".format(self.epoch))
+                checkpoint_filename = os.path.join(self.checkpoint_dir, f'ep_{self.epoch}.pkl')
                 self.save_checkpoint(checkpoint_filename)
-                self.logger.info("Epoch = %d, Checkpoint saved as: %s", self.epoch, checkpoint_filename)
+                self.logger.info(f'Epoch = {self.epoch}, Checkpoint saved as: {checkpoint_filename}')
             # update epoch
             self.epoch += 1
         # save final status
