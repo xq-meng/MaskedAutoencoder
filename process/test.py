@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 import base
 import utils
+import utils.image
 
 
 class TestHandler(base.ModelHandler):
@@ -37,7 +38,7 @@ class TestHandler(base.ModelHandler):
             x = datas['image'].to(self.device)
             with torch.no_grad():
                 ret = self.model.inference(x, **self.kwargs)
-            imgs = utils.tensor2PIL(ret)
+            imgs = utils.image.tensor2PIL(ret)
             for i, filename in enumerate(datas['name']):
                 output_path = os.path.join(self.output_dir, filename)
                 imgs[i].save(output_path)
