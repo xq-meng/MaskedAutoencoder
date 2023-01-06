@@ -1,5 +1,5 @@
-import os 
-import torch 
+import os
+import torch
 import torch.nn as nn
 import base
 import utils
@@ -7,7 +7,7 @@ import utils
 
 class TestHandler(base.ModelHandler):
     def __init__(
-        self, 
+        self,
         model: nn.Module,
         data_loader,
         checkpoint_path=None,
@@ -34,7 +34,7 @@ class TestHandler(base.ModelHandler):
 
     def run(self):
         for step, datas in enumerate(self.data_loader):
-            x = datas['reference'].to(self.device)
+            x = datas['image'].to(self.device)
             with torch.no_grad():
                 ret = self.model.inference(x, **self.kwargs)
             imgs = utils.tensor2PIL(ret)
