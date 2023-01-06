@@ -3,7 +3,7 @@ import torch
 from torch.utils.data import Dataset
 from torchvision import transforms
 from PIL import Image
-import utils
+import utils.image
 
 
 class AnimeDataset(Dataset):
@@ -22,7 +22,7 @@ class AnimeDataset(Dataset):
         ])
         self.filenames = []
         for filename in os.listdir(self.image_path):
-            if utils.is_image(filename) and os.access(os.path.join(self.image_path, filename), os.R_OK):
+            if utils.image.is_image(filename) and os.access(os.path.join(self.image_path, filename), os.R_OK):
                 self.filenames.append(filename)
         # get the number of channles via a flag image
         self.num_channel = 3

@@ -33,13 +33,16 @@ class TestHandler(base.ModelHandler):
         # kwargs
         self.kwargs = kwargs
 
-    def run(self):
+    def run(self, **kwargs):
         for step, datas in enumerate(self.data_loader):
-            x = datas['image'].to(self.device)
-            with torch.no_grad():
-                ret = self.model.inference(x, **self.kwargs)
-            imgs = utils.image.tensor2PIL(ret)
-            for i, filename in enumerate(datas['name']):
-                output_path = os.path.join(self.output_dir, filename)
-                imgs[i].save(output_path)
-                self.logger.info("Test output save as {}".format(output_path))
+            self.step(datas, **kwargs)
+
+    def step(self, datas):
+        x = datas['image'].to(self.device)
+        with torch.no_grad():
+            ret = self.model.inference(x, **self.kwargs)
+        imgs = utils.image.tensor2PIL(ret)
+        for i, filename in enumerate(datas['name']):
+            output_path = os.path.join(self.output_dir, filename)
+            imgs[i].save(output_path)
+            self.logger.info("Test output save as {}".format(output_path))

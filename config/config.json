@@ -1,7 +1,7 @@
 {
     "tasks": {
         "train": {
-            "run": false,
+            "run": true,
             "target_epochs": 400,
             "checkpoint_dir": "/mnt/data1/output/MAE/out_L/checkpoints/",
             "logging_step": 100,
