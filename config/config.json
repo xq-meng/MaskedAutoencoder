@@ -3,7 +3,7 @@
         "train": {
             "run": true,
             "target_epochs": 400,
-            "checkpoint_dir": "/mnt/data1/output/MAE/out/checkpoints/",
+            "checkpoint_dir": "/mnt/data1/output/MAE/out_L/checkpoints/",
             "logging_step": 100,
             "optimizer_config": {
                 "name": "AdamW",
@@ -15,8 +15,7 @@
             },
             "data": {
                 "dataset": {
-                    "reference_path": "/mnt/data1/dataset/Anime/train/reference/",
-                    "condition_path": "/mnt/data1/dataset/Anime/train/condition/"
+                    "path": "/mnt/data1/dataset/Anime/train/condition/"
                 },
                 "dataloader": {
                     "batch_size": 64,
@@ -29,13 +28,12 @@
         },
         "test": {
             "run": true,
-            "output_dir": "/mnt/data1/output/MAE/out/test/",
-            "checkpoint_path": "/mnt/data1/output/MAE/out/checkpoints/trained.pkl",
-            "mask_ratio": 0,
+            "output_dir": "/mnt/data1/output/MAE/out_L/test/",
+            "checkpoint_path": "/mnt/data1/output/MAE/out_L/checkpoints/trained.pkl",
+            "mask_ratio": 0.5,
             "data": {
                 "dataset": {
-                    "reference_path": "/mnt/data1/dataset/Anime/test/reference/",
-                    "condition_path": "/mnt/data1/dataset/Anime/test/condition/"
+                    "path": "/mnt/data1/dataset/Anime/test/condition/"
                 },
                 "dataloader": {
                     "batch_size": 1,
@@ -56,10 +54,11 @@
         "image_size": [256, 256],
         "patch_size": [16, 16],
         "output_dim": 1024,
-        "dim": 1024
+        "dim": 1024,
+        "channels": 1
     },
     "logging": {
         "console": true,
-        "logfile": "/mnt/data1/output/MAE/out/log/output.log"
+        "logfile": "/mnt/data1/output/MAE/out_L/log/output.log"
     }
 }

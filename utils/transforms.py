@@ -4,7 +4,7 @@ from PIL import Image
 
 
 def tensor2PIL(tsr: torch.Tensor):
-    tsr = tsr.detach().cpu()
+    tsr = torch.clamp(tsr.detach().cpu(), min=-1, max=1)
     assert len(tsr.shape) == 4
     batch_size = tsr.shape[0]
     ret = []

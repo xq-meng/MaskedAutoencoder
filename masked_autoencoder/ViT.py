@@ -113,9 +113,9 @@ class ViT(nn.Module):
         depth=6, 
         heads=8, 
         mlp_dim=2048, 
-        channels = 3, 
-        dim_head = 64, 
-        dropout = 0., 
+        channels=3, 
+        dim_head=64, 
+        dropout=0., 
         emb_dropout = 0.,
         **kwargs
     ):

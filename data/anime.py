@@ -9,11 +9,9 @@ import utils
 class AnimeDataset(Dataset):
     def __init__(
         self,
-        reference_path,
-        condition_path,
+        path,
     ):
-        self.reference_path = reference_path
-        self.condition_path = condition_path
+        self.image_path = path
         self.tf_reference = transforms.Compose([
             transforms.ToTensor(),
             transforms.Normalize(mean=[.5, .5, .5], std=[.5, .5, .5])
@@ -23,17 +21,24 @@ class AnimeDataset(Dataset):
             transforms.Normalize(mean=[.5], std=[.5])
         ])
         self.filenames = []
-        for filename in os.listdir(self.reference_path):
-            if utils.is_image(filename) and os.access(os.path.join(self.reference_path, filename), os.R_OK):
+        for filename in os.listdir(self.image_path):
+            if utils.is_image(filename) and os.access(os.path.join(self.image_path, filename), os.R_OK):
                 self.filenames.append(filename)
+        # get the number of channles via a flag image
+        self.num_channel = 3
+        if len(self.filenames) > 0:
+            flag_image = Image.open(os.path.join(self.image_path, self.filenames[0]))
+            self.num_channel = min(self.num_channel, len(flag_image.split()))
 
     def __getitem__(self, index):
         ret = {}
         filename = self.filenames[index]
-        img_reference = Image.open(os.path.join(self.reference_path, filename))
-        img_condition = Image.open(os.path.join(self.condition_path, filename))
-        ret['reference'] = self.tf_reference(img_reference)
-        ret['condition'] = self.tf_condition(img_condition)
+        img = Image.open(os.path.join(self.image_path, filename))
+        if self.num_channel == 3:
+            img = img.convert('RGB')
+            ret['image'] = self.tf_reference(img)
+        else:
+            ret['image'] = self.tf_condition(img)
         ret['name'] = filename
         return ret
 

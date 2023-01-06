@@ -42,7 +42,7 @@ class TrainHandler(base.ModelHandler):
                 # update optimizer
                 self.optimizer_handler.update_lr(epoch=(step / len(self.data_loader) + self.epoch), target_epoch=self.target_epochs)
                 # load data 
-                x = datas['reference'].to(self.device)
+                x = datas['image'].to(self.device)
                 # model step
                 self.loss = self.model(x)
                 # optimzier step
@@ -60,3 +60,4 @@ class TrainHandler(base.ModelHandler):
         # save final status
         if self.checkpoint_dir is not None:
             self.save_checkpoint(os.path.join(self.checkpoint_dir, "trained.pkl"))
+            self.logger.info(f'Epoch = {self.epoch}, Checkpoint saved as: {checkpoint_filename}')
